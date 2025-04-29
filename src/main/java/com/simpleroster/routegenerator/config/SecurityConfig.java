@@ -166,7 +166,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // IMPORTANT: Replace with your actual frontend origin(s) in production!
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:8080", // Example: Local dev frontend
+                "http://localhost:8090", // Example: Local dev frontend
                 "https://sailpocket.com" // Example: Production frontend - USE HTTPS
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
