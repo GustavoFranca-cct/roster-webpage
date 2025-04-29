@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://www.sailpocket:8090/api'; // Your backend URL
+const API_BASE_URL = 'https://sailpocket.com/api'; // Your backend URL (use public URL via Nginx)
 
 /**
  * Shows a message to the user.
