@@ -55,6 +55,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF (common for SPAs with token auth)
                 .authorizeHttpRequests(auth -> auth
+                        // Allow CORS preflight requests (OPTIONS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                         .requestMatchers(
                                 "/", // Landing page
                                 "/index.html",
@@ -165,7 +167,7 @@ public class SecurityConfig {
         // IMPORTANT: Replace with your actual frontend origin(s) in production!
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:8080", // Example: Local dev frontend
-                "http://sailpocket.com" // Example: Production frontend
+                "https://sailpocket.com" // Example: Production frontend - USE HTTPS
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
