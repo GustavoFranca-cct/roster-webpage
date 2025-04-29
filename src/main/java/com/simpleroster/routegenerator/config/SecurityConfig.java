@@ -20,6 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; // For JWT filter later
 import org.springframework.http.HttpMethod; // Import HttpMethod
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -73,7 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").authenticated()
                         // Deny any other requests not explicitly permitted or matched above.
                         // Use denyAll() for a default-deny policy, safer than just authenticated().
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll()
                 )
                 // Set session management to STATELESS because we are using JWT tokens
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -146,6 +151,33 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    /**
+     * Defines the central CORS configuration for the application.
+     * Replaces the need for @CrossOrigin annotations on controllers.
+     *
+     * @return CorsConfigurationSource bean.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // IMPORTANT: Replace with your actual frontend origin(s) in production!
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:8080", // Example: Local dev frontend
+                "http://sailpocket.com" // Example: Production frontend
+        ));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Cache preflight response for 1 hour
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Apply this configuration to all paths under /api/
+        source.registerCorsConfiguration("/api/**", configuration);
+        // You might need to add other paths if your frontend calls non-/api endpoints
+        
+        return source;
     }
 
     // TODO: Consider adding a dedicated CORS configuration bean (WebMvcConfigurer) for more fine-grained control

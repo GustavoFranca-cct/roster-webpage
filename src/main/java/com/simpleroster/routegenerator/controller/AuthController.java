@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Map;
+
 /**
  * REST Controller handling authentication requests (login, registration, auth check).
  * Base path for all endpoints in this controller is /api/auth.
@@ -18,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin // TODO: Configure CORS more restrictively for production environments!
+// @CrossOrigin // TODO: Configure CORS more restrictively for production environments!
 public class AuthController {
 
     private final AuthService authService;
@@ -28,16 +30,19 @@ public class AuthController {
      * Registers a new user.
      *
      * @param request DTO containing username and password for the new user.
-     * @return ResponseEntity with 201 Created on success, 400 Bad Request if username is taken
-     *         or input is invalid, or 500 Internal Server Error for other issues.
+     * @return ResponseEntity with a confirmation message (201 Created) on success,
+     *         400 Bad Request if username is taken or input is invalid,
+     *         or 500 Internal Server Error for other issues.
      */
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody AuthRequestDTO request) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody AuthRequestDTO request) {
         log.info("POST /register requested for username: {}", request.getUsername());
         try {
             authService.register(request);
             log.info("User {} registered successfully.", request.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            // Return a simple JSON response body
+            Map<String, String> responseBody = Map.of("message", "User registered successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
         } catch (IllegalArgumentException e) {
             log.warn("Registration failed for {}: {}", request.getUsername(), e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

@@ -245,8 +245,10 @@
 
             try {
                  // Call registerUser from api.js
-                 await registerUser({ username, password });
+                 const result = await registerUser({ username, password });
+                 console.log('Registration successful, result:', result);
                  showLoginMessage('Account created successfully! Please sign in.', 'success');
+                 console.log('Success message displayed.');
                  signupForm.reset();
                  // Optionally clear login form too or focus username field
                  document.getElementById('login-username').focus();

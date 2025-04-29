@@ -267,7 +267,8 @@ async function deleteShiftApi(shiftId) {
 // --- Auth API Calls (New) ---
 async function registerUser(credentials) { // credentials = { username, password }
     // Pass true to skip auth header
-    return await fetchApi('/auth/register', { method: 'POST', body: credentials }, true);
+    // Ensure the body is stringified for JSON content type
+    return await fetchApi('/auth/register', { method: 'POST', body: JSON.stringify(credentials) }, true);
 }
 
 async function loginUser(credentials) {

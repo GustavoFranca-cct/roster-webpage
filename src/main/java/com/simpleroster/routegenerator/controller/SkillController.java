@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/skills") // Base path for skill-related endpoints
 @RequiredArgsConstructor
-@CrossOrigin // TODO: Configure CORS more restrictively for production environments!
+// @CrossOrigin // TODO: Configure CORS more restrictively for production environments!
 public class SkillController {
 
     private final SkillService skillService;
