@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Schedule Generator</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/Lucide.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/js/api.js"></script>
+    <script>
+        // Protect page: Redirect to login if not logged in
+        if (!isLoggedIn()) {
+            console.log("User not logged in, redirecting to login page.");
+            window.location.href = '/login.html';
+        }
+    </script>
+    <link rel="stylesheet" href="/css/roster.css" >
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <h1 class="text-2xl md:text-3xl font-bold text-blue-800 mb-6">Work Schedule</h1>
+
+        <!-- Add Generation Section -->
+        <div id="generation-container" class="mb-8 p-4 border border-blue-200 rounded-lg bg-blue-50">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4">Generate New Schedule</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                <div>
+                    <label for="generate-start-date" class="block text-sm font-medium text-gray-700 mb-1">Start Date:</label>
+                    <input type="date" id="generate-start-date" name="generate-start-date" class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="generate-end-date" class="block text-sm font-medium text-gray-700 mb-1">End Date:</label>
+                    <input type="date" id="generate-end-date" name="generate-end-date" class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="business-start-time" class="block text-sm font-medium text-gray-700 mb-1">Business Start (HH:MM):</label>
+                    <input type="time" id="business-start-time" name="business-start-time" class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                 <div>
+                    <label for="business-end-time" class="block text-sm font-medium text-gray-700 mb-1">Business End (HH:MM):</label>
+                    <input type="time" id="business-end-time" name="business-end-time" class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <button id="generate-schedule-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out flex items-center justify-center gap-2">
+                        <i class="lucide lucide-wand-2 w-4 h-4"></i> Generate
+                    </button>
+                </div>
+                     <!-- Load Button -->
+                <button id="load-schedule-button" class="btn btn-secondary btn-sm">Load Schedule</button>
+                    <!-- Delete Button -->
+        <div class="flex items-center space-x-2 border-l pl-4 ml-4 border-gray-300"> <!-- Optional separator -->
+            <button id="delete-schedule-button" class="btn btn-danger btn-sm">Delete Schedule (Range)</button>
+       </div>
+            </div>
+             <!-- Add message area for generation -->
+            <div id="generation-message" class="mt-3 text-sm"></div>
+        </div>
+        <!-- End Generation Section -->
+
+        <!-- Placeholder for schedule display message -->
+        <div id="schedule-message" class="mb-4"></div>
+
+        <div id="filter-container" class="flex flex-wrap gap-4 mb-6 items-center">
+            <div class="relative flex-grow md:flex-grow-0">
+                <label for="employee-filter" class="sr-only">Filter by Employee</label>
+                <select id="employee-filter" class="w-full md:w-auto appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500">
+                    <option value="all">All Employees</option>
+                    </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <i class="lucide lucide-chevron-down text-gray-500 w-4 h-4"></i>
+                </div>
+            </div>
+            <div class="relative flex-grow md:flex-grow-0">
+                <label for="task-filter" class="sr-only">Filter by Task</label>
+                <select id="task-filter" class="w-full md:w-auto appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500">
+                    <option value="all">All Tasks</option>
+                    </select>
+                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <i class="lucide lucide-chevron-down text-gray-500 w-4 h-4"></i>
+                </div>
+            </div>
+            <div class="relative flex-grow md:flex-grow-0">
+                <label for="day-filter" class="sr-only">Filter by Day</label>
+                <select id="day-filter" class="w-full md:w-auto appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500">
+                    <option value="all">All Days</option>
+                    <!-- Options populated by JS -->
+                </select>
+                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <i class="lucide lucide-chevron-down text-gray-500 w-4 h-4"></i>
+                </div>
+            </div>
+             <button id="reset-filters" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out flex items-center gap-1">
+                 <i class="lucide lucide-rotate-ccw w-4 h-4"></i> Reset
+             </button>
+        </div>
+
+        <div class="overflow-hidden rounded-lg border border-gray-300">
+             <div id="schedule-grid-container" class="schedule-grid">
+                <div class="schedule-header employee-name" style="position: sticky; left: 0; top: 0; z-index: 15;">Employee</div>
+                <!-- Date headers added by JS -->
+                <!-- Employee rows added by JS -->
+                </div>
+        </div>
+
+    </div>
+
+    <div id="context-menu">
+        <h3 class="text-lg font-semibold text-blue-700 mb-2" id="context-menu-title">Task Details</h3>
+        <p class="text-sm text-gray-600 mb-1"><strong class="font-medium">Employee:</strong> <span id="context-menu-employee"></span></p>
+        <p class="text-sm text-gray-600 mb-1"><strong class="font-medium">Day:</strong> <span id="context-menu-day"></span></p>
+        <p class="text-sm text-gray-600 mb-1"><strong class="font-medium">Shift:</strong> <span id="context-menu-shift"></span></p>
+        <p class="text-sm text-gray-600 mb-1"><strong class="font-medium">Task:</strong> <span id="context-menu-task"></span></p>
+        <p class="text-sm text-gray-600"><strong class="font-medium">Details:</strong> <span id="context-menu-details"></span></p>
+        <div class="mt-4 pt-3 border-t space-y-2">
+             <!-- Add other actions like Edit Shift here -->
+             <button id="context-menu-delete" class="btn btn-danger btn-sm w-full flex items-center justify-center gap-1">
+                 <i class="lucide lucide-trash-2 w-4 h-4"></i> Delete Shift
+             </button>
+        </div>
+        <button id="close-context-menu" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out text-sm">
+            Close
+        </button>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const scheduleGridContainer = document.getElementById('schedule-grid-container');
+        const employeeFilter = document.getElementById('employee-filter');
+        const taskFilter = document.getElementById('task-filter');
+        const dayFilter = document.getElementById('day-filter');
+        const resetFiltersButton = document.getElementById('reset-filters');
+        const contextMenu = document.getElementById('context-menu');
+        const closeContextMenuButton = document.getElementById('close-context-menu');
+        const filterContainer = document.getElementById('filter-container');
+        const scheduleMessageArea = document.getElementById('schedule-message');
+        const generateButton = document.getElementById('generate-schedule-button');
+        const generateStartDateInput = document.getElementById('generate-start-date');
+        const generateEndDateInput = document.getElementById('generate-end-date');
+        const businessStartTimeInput = document.getElementById('business-start-time');
+        const businessEndTimeInput = document.getElementById('business-end-time');
+        const generationMessageArea = document.getElementById('generation-message');
+
+        // --- Utility Functions (showMessage, hideMessage) ---
+        function showMessage(elementId, message, type = 'info', timeout = null) {
+            const messageArea = document.getElementById(elementId);
+            if (!messageArea) {
+                console.warn(`Message area with ID ${elementId} not found.`);
+                return;
+            }
+            let bgColor, textColor;
+            switch (type) {
+                case 'success': bgColor = 'bg-green-100'; textColor = 'text-green-700'; break;
+                case 'error': bgColor = 'bg-red-100'; textColor = 'text-red-700'; break;
+                default: bgColor = 'bg-blue-100'; textColor = 'text-blue-700'; break; // info
+            }
+            messageArea.className = `p-2 rounded-md ${bgColor} ${textColor} text-sm`;
+            messageArea.textContent = message;
+            messageArea.style.display = 'block';
+            messageArea.style.visibility = 'visible';
+
+            if (timeout) {
+                setTimeout(() => hideMessage(elementId), timeout);
+            }
+        }
+
+        function hideMessage(elementId) {
+            const messageArea = document.getElementById(elementId);
+            if (messageArea) {
+                messageArea.style.visibility = 'hidden';
+                messageArea.style.display = 'none';
+                messageArea.textContent = '';
+            }
+        }
+
+        // --- Date Formatting Helper ---
+        function formatDate(date) {
+            // Basic YYYY-MM-DD format
+            return date.toISOString().split('T')[0];
+        }
+        function formatTime(timeString) {
+            // Assuming timeString is like "HH:mm:ss", return "HH:mm"
+            if (!timeString) return '';
+            return timeString.substring(0, 5);
+        }
+        function getDayAbbreviation(dateString) {
+            const date = new Date(dateString + 'T00:00:00'); // Avoid timezone issues
+            return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., Mon, Tue
+        }
+
+        // --- Populate Filters (Updated for Tasks) ---
+        async function populateFilters() {
+            employeeFilter.innerHTML = '<option value="all">All Employees</option>';
+            taskFilter.innerHTML = '<option value="all">All Tasks</option>';
+
+            try {
+                const employees = await getEmployees();
+                if (employees && Array.isArray(employees)) {
+                    employees.forEach(emp => {
+                        const option = document.createElement('option');
+                        option.value = emp.id;
+                        option.textContent = emp.name || `Employee ${emp.id}`;
+                        employeeFilter.appendChild(option);
+                    });
+                } else {
+                    console.warn('No employees found or invalid format.');
+                }
+
+                const tasks = await getTasks();
+                if (tasks && Array.isArray(tasks)) {
+                    tasks.forEach(task => {
+                        const option = document.createElement('option');
+                        option.value = task.id;
+                        option.textContent = task.name || `Task ${task.id}`;
+                        taskFilter.appendChild(option);
+                    });
+                } else {
+                    console.warn('No tasks found or invalid format.');
+                    taskFilter.disabled = true;
+                }
+
+            } catch (error) {
+                console.error("Error populating filters:", error);
+                showMessage('schedule-message', 'Error loading filter data.', 'error');
+            }
+        }
+
+        // --- Display Schedule Grid ---
+        async function displaySchedule(scheduleStartDate, scheduleEndDate) {
+            // Clear existing rows and headers except the first employee name header
+            const headers = scheduleGridContainer.querySelectorAll('.schedule-header:not(.employee-name)');
+            headers.forEach(h => h.remove());
+            const existingRows = scheduleGridContainer.querySelectorAll('.employee-row');
+            existingRows.forEach(row => row.remove());
+            scheduleGridContainer.innerHTML = '<div class="schedule-header employee-name" style="position: sticky; left: 0; top: 0; z-index: 15;">Employee</div>'; // Reset grid
+
+            if (!scheduleStartDate || !scheduleEndDate) {
+                showMessage('schedule-message', 'Please provide a valid date range to display the schedule.', 'error');
+                return;
+            }
+
+            try {
+                showMessage('schedule-message', 'Loading schedule...', 'info');
+                const shifts = await getScheduleApi(scheduleStartDate, scheduleEndDate);
+                hideMessage('schedule-message');
+
+                if (!shifts || !Array.isArray(shifts)) {
+                    showMessage('schedule-message', 'Invalid schedule data received.', 'error');
+                    return;
+                }
+
+                // --- Process Data --- 
+                const employeesData = {};
+                const datesInRange = new Set();
+                shifts.forEach(shift => {
+                    if (!shift.employeeId || !shift.shiftDate) return; // Skip invalid shifts
+
+                    datesInRange.add(shift.shiftDate);
+
+                    if (!employeesData[shift.employeeId]) {
+                        employeesData[shift.employeeId] = {
+                            name: shift.employeeName || `Employee ${shift.employeeId}`,
+                            shifts: {}
+                        };
+                    }
+                    if (!employeesData[shift.employeeId].shifts[shift.shiftDate]) {
+                        employeesData[shift.employeeId].shifts[shift.shiftDate] = [];
+                    }
+                    employeesData[shift.employeeId].shifts[shift.shiftDate].push(shift);
+                });
+
+                // --- Generate Date Headers ---
+                const sortedDates = Array.from(datesInRange).sort();
+                // If no shifts were found, create headers for the requested range
+                if (sortedDates.length === 0) {
+                     let currentDate = new Date(scheduleStartDate + 'T00:00:00');
+                     const endDateObj = new Date(scheduleEndDate + 'T00:00:00');
+                     while (currentDate <= endDateObj) {
+                         sortedDates.push(formatDate(currentDate));
+                         currentDate.setDate(currentDate.getDate() + 1);
+                     }
+                 }
+
+                 scheduleGridContainer.style.gridTemplateColumns = `minmax(150px, 1fr) repeat(${sortedDates.length}, minmax(120px, 1fr))`;
+
+                 dayFilter.innerHTML = '<option value="all">All Days</option>'; // Reset day filter
+                 sortedDates.forEach(dateStr => {
+                     const header = document.createElement('div');
+                     header.classList.add('schedule-header');
+                     header.style.position = 'sticky';
+                     header.style.top = '0';
+                     header.style.zIndex = '5';
+                     header.textContent = `${getDayAbbreviation(dateStr)} (${dateStr.substring(5)})`; // e.g., Mon (01-15)
+                     header.dataset.date = dateStr; // Store full date
+                     scheduleGridContainer.appendChild(header);
+
+                     const dayOption = document.createElement('option');
+                     dayOption.value = dateStr;
+                     dayOption.textContent = `${getDayAbbreviation(dateStr)} - ${dateStr}`;
+                     dayFilter.appendChild(dayOption);
+                 });
+
+                 // --- Build Employee Rows ---
+                if (Object.keys(employeesData).length === 0) {
+                     const row = document.createElement('div');
+                     row.classList.add('employee-row'); // Use this class for identification
+                     row.style.gridColumn = `span ${sortedDates.length + 1}`; // Span all columns
+                     row.classList.add('text-center', 'p-4', 'text-gray-500', 'bg-white');
+                     row.textContent = 'No employees scheduled for this period.';
+                     scheduleGridContainer.appendChild(row);
+                 } else {
+                     Object.entries(employeesData).forEach(([employeeId, data]) => {
+                         const employeeRow = document.createElement('div');
+                         employeeRow.classList.add('employee-row');
+                         employeeRow.dataset.employeeId = employeeId;
+                         employeeRow.style.display = 'contents';
+
+                         const nameCell = document.createElement('div');
+                         nameCell.classList.add('employee-name');
+                         nameCell.textContent = data.name;
+                         employeeRow.appendChild(nameCell);
+
+                         sortedDates.forEach(dateStr => {
+                             const cell = document.createElement('div');
+                             cell.classList.add('schedule-cell');
+                             cell.dataset.date = dateStr;
+
+                             const shiftsForDay = data.shifts[dateStr] || [];
+                             if (shiftsForDay.length > 0) {
+                                 shiftsForDay.forEach(shift => {
+                                      const shiftBlock = document.createElement('div');
+                                      shiftBlock.classList.add('shift-block');
+                                      shiftBlock.innerHTML = `
+                                         <span class="font-semibold">${formatTime(shift.startTime)} - ${formatTime(shift.endTime)}</span>
+                                         <span class="text-xs italic">${shift.taskName || ''}</span>
+                                         `;
+                                      // Add data for context menu
+                                      shiftBlock.dataset.employee = data.name;
+                                      shiftBlock.dataset.date = dateStr;
+                                      shiftBlock.dataset.startTime = formatTime(shift.startTime);
+                                      shiftBlock.dataset.endTime = formatTime(shift.endTime);
+                                      shiftBlock.dataset.shiftId = shift.id;
+                                      shiftBlock.dataset.taskId = shift.taskId || '';
+                                      shiftBlock.dataset.taskName = shift.taskName || 'No Task';
+
+                                      shiftBlock.addEventListener('contextmenu', showContextMenu);
+                                      cell.appendChild(shiftBlock);
+                                 });
+                             } else {
+                                 cell.innerHTML = '&nbsp;';
+                             }
+                             employeeRow.appendChild(cell);
+                         });
+                         scheduleGridContainer.appendChild(employeeRow);
+                     });
+                 }
+
+                applyFilters();
+
+            } catch (error) {
+                console.error("Error displaying schedule:", error);
+                showMessage('schedule-message', `Error loading schedule: ${error.message}`, 'error');
+            }
+        }
+
+        // --- Context Menu Logic (Updated for Task) ---
+        function showContextMenu(event) {
+            event.preventDefault();
+            const shiftBlock = event.currentTarget;
+
+            // Populate context menu with ShiftDTO info
+            document.getElementById('context-menu-title').textContent = 'Shift Details';
+            document.getElementById('context-menu-employee').textContent = shiftBlock.dataset.employee;
+            document.getElementById('context-menu-day').textContent = shiftBlock.dataset.date;
+            document.getElementById('context-menu-shift').textContent = `${shiftBlock.dataset.startTime} - ${shiftBlock.dataset.endTime}`;
+            document.getElementById('context-menu-task').textContent = shiftBlock.dataset.taskName || 'N/A';
+            document.getElementById('context-menu-details').textContent = `Shift ID: ${shiftBlock.dataset.shiftId || 'N/A'}, Task ID: ${shiftBlock.dataset.taskId || 'N/A'}`;
+
+            // Positioning logic remains the same
+            const menuWidth = contextMenu.offsetWidth;
+            const menuHeight = contextMenu.offsetHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            let top = event.clientY;
+            let left = event.clientX;
+            if (top + menuHeight > windowHeight) { top = windowHeight - menuHeight - 10; }
+            if (left + menuWidth > windowWidth) { left = windowWidth - menuWidth - 10; }
+            contextMenu.style.top = `${top}px`;
+            contextMenu.style.left = `${left}px`;
+            contextMenu.style.display = 'block';
+        }
+
+        function hideContextMenu() {
+            contextMenu.style.display = 'none';
+        }
+        closeContextMenuButton.addEventListener('click', hideContextMenu);
+        document.addEventListener('click', (event) => {
+            if (!contextMenu.contains(event.target)) hideContextMenu();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') hideContextMenu();
+        });
+
+        // --- Filtering Logic (Updated for Tasks) ---
+        function applyFilters() {
+            const selectedEmployee = employeeFilter.value;
+            const selectedDate = dayFilter.value;
+            const taskFilter = document.getElementById('task-filter');
+            const selectedTask = taskFilter.value;
+
+            const rows = scheduleGridContainer.querySelectorAll('.employee-row');
+            const headers = scheduleGridContainer.querySelectorAll('.schedule-header');
+            const cells = scheduleGridContainer.querySelectorAll('.schedule-cell');
+
+            // Reset visibility first
+            rows.forEach(row => { if (row.dataset.employeeId) row.style.display = 'contents'; });
+            headers.forEach(header => header.style.display = 'flex');
+            cells.forEach(cell => cell.style.display = 'flex');
+            scheduleGridContainer.querySelectorAll('.shift-block').forEach(block => block.style.display = 'flex');
+
+            // Task Filtering (Shift block level - Now using taskId)
+            if (selectedTask !== 'all') {
+                scheduleGridContainer.querySelectorAll('.shift-block').forEach(block => {
+                    if (block.dataset.taskId !== selectedTask) {
+                        block.style.display = 'none';
+                    }
+                });
+            }
+
+            // Employee Filtering (Row level) & Task Row Visibility
+            rows.forEach(row => {
+                 if (!row.dataset.employeeId) return;
+                 let rowVisible = true;
+                 // Check Employee Match
+                 if (selectedEmployee !== 'all' && row.dataset.employeeId !== selectedEmployee) {
+                     rowVisible = false;
+                 }
+                 // Check if row has any visible shifts after task filtering
+                 if (rowVisible && selectedTask !== 'all') {
+                    const visibleBlocks = Array.from(row.querySelectorAll('.shift-block')).filter(b => b.style.display !== 'none');
+                    if (visibleBlocks.length === 0) {
+                        rowVisible = false;
+                    }
+                 }
+                 row.style.display = rowVisible ? 'contents' : 'none';
+             });
+
+            // Day Filtering (Column level)
+            headers.forEach(header => {
+                 if (header.classList.contains('employee-name')) return;
+                 const matchesDate = (selectedDate === 'all' || header.dataset.date === selectedDate);
+                 header.style.display = matchesDate ? 'flex' : 'none';
+             });
+            cells.forEach(cell => {
+                 const matchesDate = (selectedDate === 'all' || cell.dataset.date === selectedDate);
+                 cell.style.display = matchesDate ? 'flex' : 'none';
+             });
+
+             // Adjust grid columns based on visible days
+             const visibleDayHeaders = Array.from(scheduleGridContainer.querySelectorAll('.schedule-header:not(.employee-name)'))
+                                        .filter(h => h.style.display !== 'none');
+             const visibleDaysCount = visibleDayHeaders.length;
+             scheduleGridContainer.style.gridTemplateColumns = `minmax(150px, 1fr) repeat(${visibleDaysCount}, minmax(120px, 1fr))`;
+
+            hideContextMenu();
+        }
+
+        function resetFilters() {
+            employeeFilter.value = 'all';
+            document.getElementById('task-filter').value = 'all';
+            dayFilter.value = 'all';
+            applyFilters();
+        }
+
+        // --- Schedule Generation Logic ---
+        async function handleGenerateClick() {
+            const startDate = generateStartDateInput.value;
+            const endDate = generateEndDateInput.value;
+            const businessStartTime = businessStartTimeInput.value; // HH:MM format
+            const businessEndTime = businessEndTimeInput.value;   // HH:MM format
+
+            // Validation
+            if (!startDate || !endDate || !businessStartTime || !businessEndTime) {
+                showMessage('generation-message', 'Please fill in all generation fields.', 'error');
+                return;
+            }
+            if (endDate < startDate) {
+                 showMessage('generation-message', 'End date cannot be before start date.', 'error');
+                 return;
+             }
+             // Basic time validation (could be more robust)
+             if (businessEndTime <= businessStartTime) {
+                 showMessage('generation-message', 'Business end time must be after start time.', 'error');
+                 return;
+             }
+
+            const requestData = {
+                startDate: startDate,
+                endDate: endDate,
+                businessStartTime: businessStartTime,
+                businessEndTime: businessEndTime
+            };
+
+            try {
+                showMessage('generation-message', 'Generating schedule... Please wait.', 'info');
+                generateButton.disabled = true;
+
+                await generateScheduleApi(requestData); // Call POST endpoint
+
+                showMessage('generation-message', 'Schedule generated successfully! Displaying results...', 'success', 3000);
+
+                // Display the newly generated schedule for the same period
+                await displaySchedule(startDate, endDate);
+
+            } catch (error) {
+                console.error("Error generating schedule:", error);
+                showMessage('generation-message', `Error generating schedule: ${error.message || 'Unknown error'}`, 'error');
+            } finally {
+                 generateButton.disabled = false;
+            }
+        }
+
+        // --- Event Listeners ---
+        employeeFilter.addEventListener('change', applyFilters);
+        document.getElementById('task-filter').addEventListener('change', applyFilters);
+        dayFilter.addEventListener('change', applyFilters);
+        resetFiltersButton.addEventListener('click', resetFilters);
+        generateButton.addEventListener('click', handleGenerateClick);
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Create message areas if they don't exist
+            if (!document.getElementById('schedule-message')) {
+                const msgDiv = document.createElement('div');
+                msgDiv.id = 'schedule-message';
+                msgDiv.className = 'mb-4';
+                filterContainer.parentNode.insertBefore(msgDiv, filterContainer);
+            }
+             if (!document.getElementById('generation-message')) {
+                const genMsgDiv = document.createElement('div');
+                genMsgDiv.id = 'generation-message';
+                genMsgDiv.className = 'mt-3 text-sm';
+                document.getElementById('generation-container')?.appendChild(genMsgDiv);
+            }
+
+            // Set default dates (e.g., current week Mon-Fri)
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+            const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust for Sunday
+            const monday = new Date(today);
+            monday.setDate(today.getDate() + diffToMonday);
+            const friday = new Date(monday);
+            friday.setDate(monday.getDate() + 4);
+
+            const defaultStartDate = formatDate(monday);
+            const defaultEndDate = formatDate(friday);
+
+            // Set default values for generation inputs
+             generateStartDateInput.value = defaultStartDate;
+             generateEndDateInput.value = defaultEndDate;
+             businessStartTimeInput.value = '09:00'; // Default business hours
+             businessEndTimeInput.value = '17:00';
+
+            await populateFilters();
+            await displaySchedule(defaultStartDate, defaultEndDate);
+        });
+
+    </script>
+
+</body>
+</html> 

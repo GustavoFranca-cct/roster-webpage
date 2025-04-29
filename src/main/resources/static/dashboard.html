@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Simple Roster</title>
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/Lucide.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="/js/api.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css" >
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside id="sidebar" class="sidebar bg-gray-800 text-white flex flex-col flex-shrink-0 h-full overflow-y-auto">
+        <div class="p-5 border-b border-gray-700">
+            <a href="#" class="text-2xl font-bold text-white">Simple Roster</a>
+        </div>
+
+        <nav class="flex-grow p-3 space-y-1">
+            <a href="#dashboard" class="sidebar-link active" data-target="dashboard">
+                <i class="lucide lucide-layout-dashboard"></i><span>Dashboard</span>
+            </a>
+            <div class="pt-2">
+                <p class="px-5 text-xs font-semibold uppercase text-gray-500 tracking-wider">Roster</p>
+                <a href="#view-roster" class="sidebar-link" data-target="view-roster">
+                    <i class="lucide lucide-calendar-days"></i><span>View Current</span>
+                </a>
+                <a href="#generate-roster" class="sidebar-link" data-target="generate-roster">
+                    <i class="lucide lucide-calendar-plus"></i><span>Generate New</span>
+                </a>
+                 <a href="#roster-history" class="sidebar-link" data-target="roster-history">
+                    <i class="lucide lucide-history"></i><span>History</span>
+                </a>
+            </div>
+             <div class="pt-2">
+                <p class="px-5 text-xs font-semibold uppercase text-gray-500 tracking-wider">Management</p>
+                <a href="#manage-employees" class="sidebar-link" data-target="manage-employees">
+                    <i class="lucide lucide-users"></i><span>Employees</span>
+                </a>
+                 <a href="#manage-tasks" class="sidebar-link" data-target="manage-tasks">
+                    <i class="lucide lucide-clipboard-list"></i><span>Tasks</span>
+                 </a>
+                 <a href="#rules-constraints" class="sidebar-link" data-target="rules-constraints">
+                    <i class="lucide lucide-list-rules"></i><span>Rules & Constraints</span>
+                </a>
+                <a href="#ga-visualization" class="sidebar-link" data-target="ga-visualization">
+                    <i class="lucide lucide-git-branch"></i><span>GA Visualization</span>
+                </a>
+                <a href="#import-data" class="sidebar-link" data-target="import-data">
+                    <i class="lucide lucide-upload"></i><span>Import Data</span>
+                </a>
+            </div>
+             <div class="pt-2">
+                <p class="px-5 text-xs font-semibold uppercase text-gray-500 tracking-wider">Settings</p>
+                 <a href="#business-settings" class="sidebar-link" data-target="business-settings">
+                    <i class="lucide lucide-building-2"></i><span>Business Settings</span>
+                </a>
+                <a href="#account-settings" class="sidebar-link" data-target="account-settings">
+                    <i class="lucide lucide-user-cog"></i><span>Account Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="p-3 border-t border-gray-700 space-y-1">
+             <a href="#help-support" class="sidebar-link" data-target="help-support">
+                <i class="lucide lucide-life-buoy"></i><span>Help / Support</span>
+            </a>
+            <a href="#" id="logout-button" class="sidebar-link">
+                <i class="lucide lucide-log-out"></i><span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay md:hidden"></div>
+
+
+    <div class="main-content flex flex-col h-screen">
+         <header class="bg-white shadow-sm p-4 flex justify-between items-center flex-shrink-0">
+             <button id="menu-button" class="md:hidden p-2 text-gray-600 hover:text-gray-900">
+                 <i class="lucide lucide-menu w-6 h-6"></i>
+             </button>
+             <div class="flex-grow"></div> <div class="flex items-center space-x-4">
+                 <button class="p-2 text-gray-500 hover:text-gray-700 relative">
+                     <i class="lucide lucide-bell"></i>
+                     <span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span> </button>
+                 <div class="flex items-center">
+                     <img src="https://placehold.co/32x32/e0f2fe/1e3a8a?text=U" alt="User Avatar" class="w-8 h-8 rounded-full mr-2">
+                     <span class="text-sm font-medium text-gray-700 hidden sm:block">User Name</span>
+                 </div>
+             </div>
+        </header>
+
+        <main class="flex-grow p-6 md:p-8 overflow-y-auto">
+
+            <section id="dashboard" class="content-section">
+                 <h2 class="text-2xl font-semibold text-gray-700 mb-4">Dashboard Overview</h2>
+
+                 <!-- Placeholder for stats (will be filled by JS) -->
+                 <div id="dashboard-stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                      <!-- Stat cards will be inserted here by displayDashboardStats() -->
+                      <p class="text-center col-span-full placeholder">Loading stats...</p>
+                 </div>
+
+                 <!-- Placeholder for alerts (will be filled by JS) -->
+                 <div class="bg-white shadow rounded-lg p-4">
+                      <h3 class="text-lg font-medium text-gray-800 mb-3">Alerts & Notifications</h3>
+                      <ul id="dashboard-alerts-list" class="space-y-2">
+                          <!-- Alerts will be inserted here by displayDashboardAlerts() -->
+                          <li class="placeholder">Loading alerts...</li>
+                      </ul>
+                 </div>
+            </section>
+
+            <section id="view-roster" class="content-section hidden">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">View Current Roster</h1>
+                <div class="mt-6 bg-white p-6 rounded-lg shadow-sm border border-gray-200 placeholder">
+                     <p>Loading roster view...</p> <!-- Placeholder for dynamically loaded content -->
+                 </div>
+            </section>
+
+            <section id="generate-roster" class="content-section hidden">
+                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Generate New Roster</h1>
+                 <p class="text-gray-600 mb-6">Configure parameters and generate an optimized schedule.</p>
+                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                     <div id="generate-roster-message"></div>
+                     <form id="generate-roster-form" class="space-y-4">
+                         <div>
+                             <label for="roster-start-date" class="form-label">Select Roster Period:</label>
+                             <input type="date" id="roster-start-date" name="roster-start-date" class="form-input inline-block w-auto mr-2">
+                             <span> to </span>
+                             <input type="date" id="roster-end-date" name="roster-end-date" class="form-input inline-block w-auto ml-2">
+                         </div>
+                         <div class="pt-4">
+                             <button type="submit" class="btn btn-primary"><i class="lucide lucide-wand-2 mr-2"></i>Generate Roster</button>
+                         </div>
+                     </form>
+                 </div>
+            </section>
+
+             <section id="roster-history" class="content-section hidden">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Roster History</h1>
+                <p class="text-gray-600 mb-6">View previously generated and published rosters.</p>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Period</th><th>Generated On</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="4" class="placeholder"><i class="lucide lucide-loader-2 animate-spin mr-2"></i> Loading history...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="manage-employees" class="content-section hidden">
+                 <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Manage Employees</h1>
+                    <button id="add-employee-button" class="btn btn-primary" onclick="showEmployeeDetail()">
+                        <i class="lucide lucide-user-plus mr-2"></i>Add New Employee
+                    </button>
+                 </div>
+                 <div class="mb-4 flex flex-wrap gap-4 items-center">
+                    <input type="search" placeholder="Search by name..." class="form-input flex-grow sm:flex-grow-0 sm:w-64">
+                    <select class="form-select flex-grow sm:flex-grow-0 sm:w-48">
+                        <option value="">Filter by Role</option>
+                        <option>Cashier</option>
+                        <option>Manager</option>
+                        <option>Barista</option>
+                    </select>
+                    <select class="form-select flex-grow sm:flex-grow-0 sm:w-48">
+                        <option value="">Filter by Status</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                 </div>
+                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+                     <div id="employee-list-message"></div>
+                     <table class="data-table min-w-full">
+                         <thead>
+                             <tr><th>Name</th><th>Contract Hours</th><th>Status</th><th>Actions</th></tr>
+                         </thead>
+                         <tbody>
+                             <tr><td colspan="4" class="placeholder"><i class="lucide lucide-loader-2 animate-spin mr-2"></i> Loading employees...</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+            </section>
+
+             <section id="employee-detail" class="content-section hidden">
+                 <button class="btn btn-outline btn-sm mb-4" onclick="hideEmployeeDetail()">
+                     <i class="lucide lucide-arrow-left mr-1"></i> Back to Employee List
+                 </button>
+                <h1 id="employee-detail-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Employee Details</h1>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                     <div id="employee-detail-message"></div>
+                     <div class="tab-list flex flex-wrap">
+                         <button class="tab-button active" data-tab="basic-info">Employee Details</button>
+                         <button class="tab-button" data-tab="skills">Skills</button>
+                         <button class="tab-button" data-tab="constraints">Constraints</button>
+                    </div>
+                     <div id="basic-info" class="tab-content active">
+                        <h3 class="text-lg font-semibold mb-4">Employee Information</h3>
+                        <form id="employee-form" class="space-y-4">
+                            <input type="hidden" id="emp-id">
+                            <div>
+                                <label for="emp-name" class="form-label">Full Name</label>
+                                <input type="text" id="emp-name" name="name" class="form-input" placeholder="Loading..." required>
+                            </div>
+                            <div>
+                                <label for="emp-contract-hours" class="form-label">Contract Hours per Week</label>
+                                <input type="number" id="emp-contract-hours" name="contractHours" class="form-input" placeholder="e.g., 40" min="0" required>
+                            </div>
+                            <div>
+                                <label for="emp-availability" class="form-label">Availability</label>
+                                <textarea id="emp-availability" name="availability" class="form-textarea" rows="3" placeholder="e.g., Mon_0900_1700,Tue_1000_1800"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Format: Day_Start_End (HHmm), comma-separated. Example: Mon_0900_1700,Wed_1200_2000</p>
+                            </div>
+                            <div>
+                                <label for="emp-preferences" class="form-label">Preferences</label>
+                                <textarea id="emp-preferences" name="preferences" class="form-textarea" rows="3" placeholder="e.g., Unpreferred:Mon_Morning;PreferredHours:35"></textarea>
+                                 <p class="text-xs text-gray-500 mt-1">Format: Key:Value, semicolon-separated. Example: Unpreferred:Sat_Any,Preferred:Sun_Afternoon</p>
+                            </div>
+                            <div class="pt-4 flex justify-end space-x-3">
+                                <button type="button" class="btn btn-secondary" onclick="hideEmployeeDetail()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Employee</button>
+                            </div>
+                        </form>
+                     </div>
+                    <div id="skills" class="tab-content hidden">
+                         <div id="skills-checkbox-container" class="space-y-2 placeholder">
+                            <i class="lucide lucide-loader-2 animate-spin mr-2"></i> Loading skills...
+                        </div>
+                    </div>
+                    <div id="constraints" class="tab-content hidden">
+                        <h3 class="text-lg font-semibold mb-4">Scheduling Constraints</h3>
+                        <form id="employee-constraints-form" class="space-y-4">
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="emp-max-consecutive-days" class="form-label">Max Consecutive Work Days</label>
+                                    <input type="number" id="emp-max-consecutive-days" name="maxConsecutiveDays" class="form-input" placeholder="e.g., 5" min="0">
+                                </div>
+                                <div>
+                                    <label for="emp-min-consecutive-days" class="form-label">Min Consecutive Work Days</label>
+                                    <input type="number" id="emp-min-consecutive-days" name="minConsecutiveDays" class="form-input" placeholder="e.g., 1" min="0">
+                                </div>
+                                <div>
+                                    <label for="emp-max-weekends" class="form-label">Max Weekends Worked (Period)</label>
+                                    <input type="number" id="emp-max-weekends" name="maxWeekends" class="form-input" placeholder="e.g., 2" min="0">
+                                </div>
+                                <div>
+                                    <label for="emp-max-total-hours" class="form-label">Max Total Hours (Period)</label>
+                                    <input type="number" id="emp-max-total-hours" name="maxTotalHours" class="form-input" placeholder="Leave blank to use Contract Hours" min="0">
+                                </div>
+                                 <div>
+                                    <label for="emp-min-total-hours" class="form-label">Min Total Hours (Period)</label>
+                                    <input type="number" id="emp-min-total-hours" name="minTotalHours" class="form-input" placeholder="e.g., 20" min="0">
+                                </div>
+                            </div>
+                             <h4 class="text-md font-medium mt-4 pt-4 border-t">Constraint Penalty Weights</h4>
+                             <p class="text-xs text-gray-500">Lower value = less penalty for violating this constraint.</p>
+                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="emp-consecutive-day-penalty-weight" class="form-label">Consecutive Day Weight</label>
+                                    <input type="number" id="emp-consecutive-day-penalty-weight" name="consecutiveDayPenaltyWeight" class="form-input" placeholder="e.g., 5" min="0">
+                                </div>
+                                <div>
+                                    <label for="emp-weekend-penalty-weight" class="form-label">Weekend Weight</label>
+                                    <input type="number" id="emp-weekend-penalty-weight" name="weekendPenaltyWeight" class="form-input" placeholder="e.g., 10" min="0">
+                                </div>
+                                <div>
+                                    <label for="emp-total-hours-penalty-weight" class="form-label">Total Hours Weight</label>
+                                    <input type="number" id="emp-total-hours-penalty-weight" name="totalHoursPenaltyWeight" class="form-input" placeholder="e.g., 2" min="0">
+                                </div>
+                            </div>
+                             <div class="pt-4 flex justify-end">
+                                <button type="button" class="btn btn-primary" onclick="saveEmployeeConstraints()">Save Constraints</button>
+                             </div>
+                        </form>
+                    </div>
+                </div>
+             </section>
+
+            <section id="manage-tasks" class="content-section hidden">
+                 <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Manage Tasks</h1>
+                    <button id="add-task-button" class="btn btn-primary" onclick="showTaskDetail()">
+                        <i class="lucide lucide-plus mr-2"></i>Add New Task
+                    </button>
+                 </div>
+                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+                     <div id="task-list-message"></div>
+                     <table class="data-table min-w-full">
+                         <thead>
+                             <tr><th>Name</th><th>Description</th><th>Min Cov.</th><th>Opt Cov.</th><th>Weight</th><th>Actions</th></tr>
+                         </thead>
+                         <tbody>
+                             <tr><td colspan="6" class="placeholder"><i class="lucide lucide-loader-2 animate-spin mr-2"></i> Loading tasks...</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+            </section>
+
+            <section id="task-detail" class="content-section hidden">
+                 <button class="btn btn-outline btn-sm mb-4" onclick="hideTaskDetail()">
+                     <i class="lucide lucide-arrow-left mr-1"></i> Back to Task List
+                 </button>
+                <h1 id="task-detail-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Task Details</h1>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                     <div id="task-detail-message"></div>
+                     <form id="task-form" class="space-y-4">
+                         <input type="hidden" id="task-id">
+                         <div>
+                             <label for="task-name" class="form-label">Task Name</label>
+                             <input type="text" id="task-name" name="name" class="form-input" placeholder="e.g., Front Desk" required>
+                         </div>
+                         <div>
+                             <label for="task-description" class="form-label">Description</label>
+                             <textarea id="task-description" name="description" class="form-textarea" rows="2" placeholder="Brief description of the task"></textarea>
+                         </div>
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                             <div>
+                                 <label for="task-min-coverage" class="form-label">Minimum Coverage</label>
+                                 <input type="number" id="task-min-coverage" name="minimumCoverage" class="form-input" placeholder="e.g., 1" min="0" required>
+                                 <p class="text-xs text-gray-500 mt-1">Min staff needed for this task.</p>
+                             </div>
+                             <div>
+                                 <label for="task-opt-coverage" class="form-label">Optimal Coverage</label>
+                                 <input type="number" id="task-opt-coverage" name="optimalCoverage" class="form-input" placeholder="e.g., 2" min="0" required>
+                                  <p class="text-xs text-gray-500 mt-1">Ideal staff for this task.</p>
+                             </div>
+                             <div>
+                                 <label for="task-penalty-weight" class="form-label">Coverage Penalty Weight</label>
+                                 <input type="number" id="task-penalty-weight" name="penaltyWeight" class="form-input" placeholder="e.g., 10" min="0" required>
+                                 <p class="text-xs text-gray-500 mt-1">Importance of meeting coverage.</p>
+                             </div>
+                         </div>
+                         <!-- Skill requirement selection -->
+                         <div>
+                             <label class="form-label">Required Skills</label>
+                             <div id="task-skills-checkbox-container" class="mt-2 space-y-2 border p-3 rounded-md bg-gray-50 max-h-40 overflow-y-auto">
+                                 <p class="text-gray-500 italic placeholder">Loading skills...</p>
+                             </div>
+                         </div>
+                         <div class="pt-4 flex justify-end space-x-3">
+                             <button type="button" class="btn btn-secondary" onclick="hideTaskDetail()">Cancel</button>
+                             <button type="submit" class="btn btn-primary">Save Task</button>
+                         </div>
+                     </form>
+                 </div>
+            </section>
+
+            <section id="rules-constraints" class="content-section hidden">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Global Rules & Constraints</h1>
+                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 space-y-6">
+                      <div id="rules-message"></div>
+                      <form id="rules-form" class="space-y-4">
+                         <h3 class="text-lg font-semibold border-b pb-2">Genetic Algorithm Parameters</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                             <div>
+                                 <label for="rule-ga-population-size" class="form-label">Population Size</label>
+                                 <input type="number" id="rule-ga-population-size" name="ga.population.size" class="form-input" placeholder="e.g., 50" min="10">
+                             </div>
+                             <div>
+                                 <label for="rule-ga-max-generations" class="form-label">Max Generations</label>
+                                 <input type="number" id="rule-ga-max-generations" name="ga.max.generations" class="form-input" placeholder="e.g., 100" min="10">
+                             </div>
+                              <div>
+                                 <label for="rule-ga-tournament-size" class="form-label">Tournament Size</label>
+                                 <input type="number" id="rule-ga-tournament-size" name="ga.tournament.size" class="form-input" placeholder="e.g., 5" min="2">
+                             </div>
+                             <div>
+                                 <label for="rule-ga-crossover-rate" class="form-label">Crossover Rate (0.0-1.0)</label>
+                                 <input type="number" id="rule-ga-crossover-rate" name="ga.crossover.rate" class="form-input" placeholder="e.g., 0.8" step="0.01" min="0" max="1">
+                             </div>
+                             <div>
+                                 <label for="rule-ga-mutation-rate" class="form-label">Mutation Rate (0.0-1.0)</label>
+                                 <input type="number" id="rule-ga-mutation-rate" name="ga.mutation.rate" class="form-input" placeholder="e.g., 0.1" step="0.01" min="0" max="1">
+                             </div>
+                         </div>
+
+                         <h3 class="text-lg font-semibold border-b pb-2 mt-6">Penalty Weights (Base)</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div>
+                                 <label for="rule-penalty-hard-constraint" class="form-label">Hard Constraint Violation</label>
+                                 <input type="number" id="rule-penalty-hard-constraint" name="penalty.hard.constraint" class="form-input" placeholder="e.g., 1000" min="0">
+                             </div>
+                             <div>
+                                 <label for="rule-penalty-under-staffing" class="form-label">Under-Staffing (Base)</label>
+                                 <input type="number" id="rule-penalty-under-staffing" name="penalty.under.staffing" class="form-input" placeholder="e.g., 500" min="0">
+                             </div>
+                             <div>
+                                 <label for="rule-penalty-over-staffing" class="form-label">Over-Staffing (Base)</label>
+                                 <input type="number" id="rule-penalty-over-staffing" name="penalty.over.staffing" class="form-input" placeholder="e.g., 50" min="0">
+                             </div>
+                             <div>
+                                 <label for="rule-penalty-forbidden-succession" class="form-label">Forbidden Succession</label>
+                                 <input type="number" id="rule-penalty-forbidden-succession" name="penalty.forbidden.succession" class="form-input" placeholder="e.g., 200" min="0">
+                             </div>
+                         </div>
+
+                         <h3 class="text-lg font-semibold border-b pb-2 mt-6">Shift Thresholds</h3>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div>
+                                 <label for="rule-threshold-late-shift-end" class="form-label">Late Shift Ends After (HH:MM)</label>
+                                 <input type="time" id="rule-threshold-late-shift-end" name="threshold.late.shift.end" class="form-input" placeholder="e.g., 19:59">
+                             </div>
+                              <div>
+                                 <label for="rule-threshold-early-shift-start" class="form-label">Early Shift Starts Before (HH:MM)</label>
+                                 <input type="time" id="rule-threshold-early-shift-start" name="threshold.early.shift.start" class="form-input" placeholder="e.g., 08:00">
+                             </div>
+                         </div>
+
+                         <div class="pt-4 flex justify-end">
+                            <button type="submit" class="btn btn-primary">Save Rules</button>
+                         </div>
+                      </form>
+                 </div>
+            </section>
+            <section id="import-data" class="content-section hidden">
+                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Import Data</h1>
+                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                     <div id="import-message"></div>
+                     <div class="mb-6">
+                         <h3 class="text-lg font-semibold mb-3">Import Employees</h3>
+                         <form id="import-employees-form" class="space-y-4">
+                             <div>
+                                 <label for="import-employees-file" class="form-label">Select Excel File (.xlsx)</label>
+                                 <input type="file" id="import-employees-file" name="file" class="form-input" accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                 <p class="text-xs text-gray-500 mt-1">Upload an Excel file with employee data.</p>
+                             </div>
+                             <div class="pt-4 flex justify-end">
+                                <button type="submit" class="btn btn-primary">Upload & Import Employees</button>
+                             </div>
+                         </form>
+                     </div>
+
+                     <div class="border-t pt-6 mb-6">
+                         <h3 class="text-lg font-semibold mb-3">Import Skills</h3>
+                         <form id="import-skills-form" class="space-y-4">
+                             <div>
+                                 <label for="import-skills-file" class="form-label">Select Excel File (.xlsx)</label>
+                                 <input type="file" id="import-skills-file" name="file" class="form-input" accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                 <p class="text-xs text-gray-500 mt-1">Upload an Excel file with skills data.</p>
+                             </div>
+                             <div class="pt-4 flex justify-end">
+                                <button type="submit" class="btn btn-primary">Upload & Import Skills</button>
+                             </div>
+                         </form>
+                     </div>
+
+                     <div class="border-t pt-6">
+                         <h3 class="text-lg font-semibold mb-3">Import Tasks</h3>
+                         <form id="import-tasks-form" class="space-y-4">
+                             <div>
+                                 <label for="import-tasks-file" class="form-label">Select Excel File (.xlsx)</label>
+                                 <input type="file" id="import-tasks-file" name="file" class="form-input" accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                 <p class="text-xs text-gray-500 mt-1">Upload an Excel file with tasks data.</p>
+                             </div>
+                             <div class="pt-4 flex justify-end">
+                                <button type="submit" class="btn btn-primary">Upload & Import Data</button>
+                             </div>
+                         </form>
+                     </div>
+                 </div>
+            </section>
+             <section id="business-settings" class="content-section hidden">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Business Settings</h1>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 max-w-xl">
+                    <div id="business-settings-message"></div>
+                    <form id="business-settings-form" class="space-y-4">
+                         <h3 class="text-lg font-semibold border-b pb-2">Operating Hours</h3>
+                         <div>
+                            <label for="setting-business-start-time" class="form-label">Default Business Start Time</label>
+                            <input type="time" id="setting-business-start-time" name="business.default.start_time" class="form-input">
+                        </div>
+                        <div>
+                            <label for="setting-business-end-time" class="form-label">Default Business End Time</label>
+                            <input type="time" id="setting-business-end-time" name="business.default.end_time" class="form-input">
+                        </div>
+                        <!-- Add other relevant business settings here -->
+                        <!-- Example:
+                        <div>
+                            <label for="setting-default-contract-hours" class="form-label">Default Contract Hours (New Employees)</label>
+                            <input type="number" id="setting-default-contract-hours" name="employee.default.contract_hours" class="form-input" placeholder="e.g., 40" min="0">
+                        </div>
+                         -->
+                         <div class="pt-4 flex justify-end">
+                            <button type="submit" class="btn btn-primary">Save Business Settings</button>
+                         </div>
+                    </form>
+                </div>
+             </section>
+            <section id="account-settings" class="content-section hidden">
+                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Account Settings</h1>
+                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 max-w-xl">
+                    <form id="account-settings-form" class="space-y-4">
+                        <div>
+                            <label for="account-username" class="form-label">Username</label>
+                            <input type="text" id="account-username" name="username" class="form-input bg-gray-100" placeholder="Loading..." readonly>
+                        </div>
+                         <div>
+                            <label for="account-email" class="form-label">Email Address (Optional)</label>
+                            <input type="email" id="account-email" name="email" class="form-input" placeholder="(Not implemented)">
+                        </div>
+                         <div>
+                             <label class="form-label">Password</label>
+                            <button type="button" class="btn btn-outline">Change Password (Not Implemented)</button>
+                         </div>
+                         <div class="pt-4 flex justify-end">
+                            <button type="submit" class="btn btn-primary" disabled>Save Changes (Not Implemented)</button>
+                         </div>
+                    </form>
+                 </div>
+             </section>
+             <section id="help-support" class="content-section hidden">
+                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Help / Support</h1>
+                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 space-y-4">
+                    <p>If you need assistance, please refer to the resources below:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><a href="#" class="text-blue-600 hover:underline">User Guide / Documentation (Link Placeholder)</a></li>
+                        <li><a href="#" class="text-blue-600 hover:underline">Frequently Asked Questions (Link Placeholder)</a></li>
+                    </ul>
+                    <p>For further support, contact us at: <a href="mailto:support@example.com" class="text-blue-600 hover:underline">support@example.com</a> (Placeholder Email)</p>
+                 </div>
+             </section>
+
+            <section id="ga-visualization" class="content-section hidden">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900">Genetic Algorithm Visualization</h1>
+                    <p class="text-gray-600 mt-1">Visualize and experiment with the genetic algorithm parameters in real-time.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left column: Controls and Parameters -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-4">GA Parameters</h2>
+                            <form id="ga-params-form" class="space-y-4">
+                                <div>
+                                    <label for="ga-population-size" class="block text-sm font-medium text-gray-700">Population Size</label>
+                                    <input type="number" id="ga-population-size" name="ga.population.size" min="10" max="200" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="ga-max-generations" class="block text-sm font-medium text-gray-700">Max Generations</label>
+                                    <input type="number" id="ga-max-generations" name="ga.max.generations" min="10" max="500" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="ga-mutation-rate" class="block text-sm font-medium text-gray-700">Mutation Rate</label>
+                                    <input type="number" id="ga-mutation-rate" name="ga.mutation.rate" min="0" max="1" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="ga-crossover-rate" class="block text-sm font-medium text-gray-700">Crossover Rate</label>
+                                    <input type="number" id="ga-crossover-rate" name="ga.crossover.rate" min="0" max="1" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="ga-tournament-size" class="block text-sm font-medium text-gray-700">Tournament Size</label>
+                                    <input type="number" id="ga-tournament-size" name="ga.tournament.size" min="2" max="20" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="pt-4">
+                                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        Update Parameters
+                                    </button>
+                                </div>
+                            </form>
+                            <p id="ga-params-message" class="message mt-4"></p>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-4">Penalty Weights</h2>
+                            <form id="ga-penalties-form" class="space-y-4">
+                                <div>
+                                    <label for="penalty-hard-constraint" class="block text-sm font-medium text-gray-700">Hard Constraint Penalty</label>
+                                    <input type="number" id="penalty-hard-constraint" name="penalty.hard.constraint" min="100" max="1000" step="50" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="penalty-under-staffing" class="block text-sm font-medium text-gray-700">Under Staffing Penalty</label>
+                                    <input type="number" id="penalty-under-staffing" name="penalty.under.staffing" min="50" max="500" step="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="penalty-over-staffing" class="block text-sm font-medium text-gray-700">Over Staffing Penalty</label>
+                                    <input type="number" id="penalty-over-staffing" name="penalty.over.staffing" min="10" max="100" step="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="penalty-forbidden-succession" class="block text-sm font-medium text-gray-700">Forbidden Succession Penalty</label>
+                                    <input type="number" id="penalty-forbidden-succession" name="penalty.forbidden.succession" min="50" max="300" step="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="pt-4">
+                                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        Update Penalties
+                                    </button>
+                                </div>
+                            </form>
+                            <p id="ga-penalties-message" class="message mt-4"></p>
+                        </div>
+                    </div>
+
+                    <!-- Middle column: Visualization -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-4">GA Visualization</h2>
+                            <div class="mb-4">
+                                <form id="ga-visualization-form" class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="ga-start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                            <input type="date" id="ga-start-date" name="startDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label for="ga-end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                            <input type="date" id="ga-end-date" name="endDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                    <div class="pt-2">
+                                        <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                            Run Visualization
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <div id="ga-visualization-container" class="mt-6">
+                                <div id="ga-progress-container" class="hidden">
+                                    <div class="flex justify-between mb-2">
+                                        <span id="ga-generation-info" class="text-sm font-medium text-gray-700">Generation: 0/0</span>
+                                        <span id="ga-fitness-info" class="text-sm font-medium text-gray-700">Best Fitness: 0</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="ga-progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div id="ga-chart-container" class="mt-6" style="height: 400px; width: 100%; position: relative;">
+                                    <canvas id="fitnessChart" style="width: 100% !important; height: 100% !important;"></canvas>
+                                </div>
+                                
+                                <div id="ga-results-container" class="mt-6 hidden">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-2">Best Schedule</h3>
+                                    <div id="ga-schedule-table" class="overflow-x-auto">
+                                        <!-- Schedule table will be inserted here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p id="ga-visualization-message" class="message mt-4"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/js/dashboard.js" defer></script>
+
+</body>
+</html>

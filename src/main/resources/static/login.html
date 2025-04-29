@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up - Simple Roster</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/Lucide.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #374151; /* gray-700 */
+             /* Subtle polygonal background from work schedule UI */
+            background-color: #f0f9ff; /* Light blue background */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23e0f2fe' fill-opacity='0.6'%3E%3Cpath d='M20 0L0 20l20 20 20-20L20 0zM0 20h40v20H0V20z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Full viewport height */
+        }
+
+        /* Consistent button styles (copied from landing page for consistency) */
+        .btn {
+            display: inline-block;
+            padding: 0.65rem 1.5rem; /* Adjusted padding for form buttons */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            width: 100%; /* Make buttons full width */
+        }
+        .btn-primary {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* blue-700 */
+        }
+        .btn-secondary {
+            background-color: #facc15; /* yellow-400 */
+            color: #713f12; /* yellow-900 */
+        }
+         .btn-secondary:hover {
+             background-color: #eab308; /* yellow-500 */
+         }
+         /* Style for social buttons */
+         .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem; /* space-x-2 */
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            background-color: white;
+            color: #374151; /* gray-700 */
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500; /* font-medium */
+            width: 100%;
+         }
+         .btn-social:hover {
+            background-color: #f9fafb; /* gray-50 */
+         }
+
+        /* Form input styling */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: white;
+            transition: border-color 0.2s ease-in-out;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb; /* blue-600 */
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); /* Ring effect */
+        }
+
+        /* Hide element visually but keep accessible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Styling for the toggle link */
+        .toggle-link {
+            color: #2563eb; /* blue-600 */
+            font-weight: 500; /* font-medium */
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 md:p-12 rounded-xl shadow-2xl w-full max-w-md">
+
+        <div class="text-center mb-8">
+            <img src="/images/android-chrome-192x192.png" alt="Logo" class="w-16 h-16 mx-auto mb-4">
+            <h1 class="text-3xl font-bold text-gray-800">Welcome</h1>
+            <p class="text-gray-500">Sign in or create an account to manage your roster</p>
+        </div>
+
+        <!-- Message Area -->
+        <div id="message-area" class="mb-4 text-sm text-center"></div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="login-username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input type="text" id="login-username" name="username" required
+                       class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                       placeholder="Enter your username">
+            </div>
+            <div>
+                <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="login-password" name="password" required
+                       class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                       placeholder="Enter your password">
+            </div>
+             <!-- Add forgot password link if needed -->
+             <!-- <div class="text-right text-sm">
+                 <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+             </div> -->
+            <div>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Sign In
+                </button>
+            </div>
+        </form>
+
+        <div class="my-6 text-center">
+            <span class="text-sm text-gray-500">Or</span>
+        </div>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="space-y-4">
+             <div>
+                <label for="signup-username" class="block text-sm font-medium text-gray-700 mb-1">Choose Username</label>
+                <input type="text" id="signup-username" name="username" required
+                       class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                       placeholder="Choose a username">
+            </div>
+            <div>
+                <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Choose Password</label>
+                <input type="password" id="signup-password" name="password" required minlength="6" 
+                       class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                       placeholder="Create a password (min 6 chars)">
+            </div>
+             <div>
+                <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <input type="password" id="signup-confirm-password" name="confirmPassword" required
+                       class="form-input w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                       placeholder="Confirm your password">
+            </div>
+            <div>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-indigo-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Create Account
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/js/api.js"></script> <!-- Make sure api.js is included -->
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const messageArea = document.getElementById('message-area');
+
+        // Utility to show messages
+        function showLoginMessage(message, type = 'error') {
+            messageArea.textContent = message;
+            messageArea.className = `mb-4 text-sm text-center ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoginMessage('Signing in...', 'info');
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!username || !password) {
+                showLoginMessage('Please enter username and password.');
+                return;
+            }
+
+            try {
+                // Call loginUser from api.js
+                const response = await loginUser({ username, password });
+                // loginUser now stores the token in localStorage internally
+                showLoginMessage('Login successful! Redirecting...', 'success');
+                // Redirect to dashboard
+                 window.location.href = '/dashboard.html';
+
+            } catch (error) {
+                console.error("Login failed:", error);
+                // Use the error message from the ResponseStatusException if available
+                 const errorMessage = error.response && error.response.message ? error.response.message : (error.message || 'Login failed. Please check credentials.');
+                 showLoginMessage(errorMessage);
+            }
+        });
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+            if (!username || !password || !confirmPassword) {
+                showLoginMessage('Please fill all signup fields.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showLoginMessage('Passwords do not match.');
+                return;
+            }
+            if (password.length < 6) {
+                 showLoginMessage('Password must be at least 6 characters long.');
+                 return;
+            }
+
+             showLoginMessage('Creating account...', 'info');
+
+            try {
+                 // Call registerUser from api.js
+                 await registerUser({ username, password });
+                 showLoginMessage('Account created successfully! Please sign in.', 'success');
+                 signupForm.reset();
+                 // Optionally clear login form too or focus username field
+                 document.getElementById('login-username').focus();
+
+             } catch (error) {
+                 console.error("Signup failed:", error);
+                 const errorMessage = error.response && error.response.message ? error.response.message : (error.message || 'Signup failed. Username might be taken.');
+                 showLoginMessage(errorMessage);
+             }
+        });
+
+         // Check if user is already logged in (e.g., by checking for token)
+         // If yes, redirect to dashboard immediately
+         document.addEventListener('DOMContentLoaded', () => {
+             if (isLoggedIn()) { // Use function from api.js
+                 console.log("User already logged in, redirecting...");
+                 window.location.href = '/dashboard.html';
+             }
+         });
+
+    </script>
+</body>
+</html> 

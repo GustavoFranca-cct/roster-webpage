@@ -1,0 +1,307 @@
+/* Custom styles */
+body {
+    font-family: 'Inter', sans-serif;
+    color: #374151; /* gray-700 */
+    background-color: #f3f4f6; /* gray-100 */
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 260px; /* Fixed width */
+    transition: width 0.3s ease;
+}
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem; /* py-3 px-5 */
+    border-radius: 0.5rem; /* rounded-lg */
+    color: #d1d5db; /* gray-300 */
+    font-weight: 500; /* font-medium */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;
+}
+.sidebar-link:hover {
+    background-color: #374151; /* gray-700 */
+    color: white;
+}
+.sidebar-link.active {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+    font-weight: 600;
+}
+.sidebar-link i {
+    margin-right: 0.75rem; /* mr-3 */
+    flex-shrink: 0; /* Prevent icon shrinking */
+    width: 1.25rem; /* w-5 */
+    height: 1.25rem; /* h-5 */
+}
+
+/* Main content area styling */
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto; /* Allow vertical scrolling */
+    /* Polygonal background */
+    background-color: #f0f9ff; /* Light blue background */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23e0f2fe' fill-opacity='0.6'%3E%3Cpath d='M20 0L0 20l20 20 20-20L20 0zM0 20h40v20H0V20z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Card styling */
+.stat-card {
+    background-color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    padding: 1.5rem; /* p-6 */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
+    border: 1px solid #e5e7eb; /* gray-200 */
+    display: flex;
+    align-items: center;
+}
+.stat-card-icon {
+    padding: 0.75rem; /* p-3 */
+    border-radius: 9999px; /* rounded-full */
+    margin-right: 1rem; /* mr-4 */
+}
+
+/* Button styles (reusing from previous pages) */
+.btn {
+    display: inline-block;
+    padding: 0.65rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+.btn-primary {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8; /* blue-700 */
+}
+.btn-secondary {
+    background-color: #facc15; /* yellow-400 */
+    color: #713f12; /* yellow-900 */
+}
+.btn-secondary:hover {
+    background-color: #eab308; /* yellow-500 */
+}
+.btn-outline {
+    background-color: transparent;
+    color: #4b5563; /* gray-600 */
+    border: 1px solid #d1d5db; /* gray-300 */
+}
+.btn-outline:hover {
+    background-color: #f9fafb; /* gray-50 */
+    border-color: #9ca3af; /* gray-400 */
+}
+.btn-danger {
+    background-color: #ef4444; /* red-500 */
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #dc2626; /* red-600 */
+}
+.btn-sm {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500;
+}
+
+/* Table styling */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.data-table th, .data-table td {
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb; /* gray-200 */
+    font-size: 0.875rem; /* text-sm */
+}
+.data-table th {
+    background-color: #f9fafb; /* gray-50 */
+    font-weight: 600;
+    color: #4b5563; /* gray-600 */
+}
+.data-table tbody tr:hover {
+    background-color: #f9fafb; /* gray-50 */
+}
+.data-table img.avatar {
+    width: 2.5rem; /* w-10 */
+    height: 2.5rem; /* h-10 */
+    border-radius: 9999px; /* rounded-full */
+    object-fit: cover;
+}
+
+/* Form input styling */
+.form-input, .form-select, .form-textarea, .form-checkbox, .form-radio {
+    padding: 0.5rem 0.75rem; /* py-2 px-3 */
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.375rem; /* rounded-md */
+    background-color: white;
+    transition: border-color 0.2s ease-in-out;
+    font-size: 0.875rem; /* text-sm */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+}
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+}
+.form-checkbox, .form-radio {
+    border-radius: 0.25rem; /* rounded */
+    color: #2563eb; /* blue-600 */
+    padding: 0; /* Remove padding for checkbox/radio */
+    height: 1rem; /* h-4 */
+    width: 1rem; /* w-4 */
+    margin-right: 0.5rem; /* Add space after checkbox */
+}
+.form-checkbox:focus, .form-radio:focus {
+    ring: 2px;
+    ring-offset: 0;
+    ring: blue-500;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #2563eb; /* blue-600 */
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); /* Ring effect */
+}
+.form-label {
+    display: block;
+    margin-bottom: 0.25rem; /* mb-1 */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #374151; /* gray-700 */
+}
+/* Styling for weight input */
+.weight-input {
+    width: 80px; /* Fixed width for weight */
+}
+
+/* Tab styling */
+.tab-list {
+    border-bottom: 1px solid #d1d5db; /* gray-300 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+.tab-button {
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    margin-bottom: -1px; /* Overlap border */
+    border: 1px solid transparent;
+    border-bottom: none;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;
+    color: #6b7280; /* gray-500 */
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+.tab-button:hover {
+    color: #374151; /* gray-700 */
+}
+.tab-button.active {
+    color: #2563eb; /* blue-600 */
+    border-color: #d1d5db; /* gray-300 */
+    border-bottom-color: white; /* Hide bottom border */
+    border-top-left-radius: 0.375rem; /* rounded-t-md */
+    border-top-right-radius: 0.375rem; /* rounded-t-md */
+    background-color: white;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* Availability Grid Styling */
+.availability-grid {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr)); /* Day labels + 7 days */
+    gap: 1px;
+    background-color: #e5e7eb; /* grid line color */
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+.availability-header, .availability-cell, .availability-time-label {
+    background-color: white;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.75rem; /* text-xs */
+}
+.availability-header {
+    background-color: #f9fafb; /* gray-50 */
+    font-weight: 600;
+}
+.availability-time-label {
+    background-color: #f9fafb; /* gray-50 */
+    font-weight: 600;
+    text-align: right;
+    padding-right: 0.75rem;
+}
+.availability-cell {
+    /* Placeholder for interactive elements */
+    cursor: pointer;
+    min-height: 30px;
+    position: relative;
+}
+.availability-cell:hover {
+    background-color: #eff6ff; /* blue-50 */
+}
+/* Example: Add a simple indicator */
+.availability-cell.available::after {
+    content: '';
+    position: absolute;
+    inset: 4px; /* Small padding */
+    background-color: #86efac; /* green-300 */
+    border-radius: 2px;
+    opacity: 0.7;
+}
+.availability-cell.unavailable::after {
+    content: '';
+    position: absolute;
+    inset: 4px; /* Small padding */
+    background-color: #fca5a5; /* red-300 */
+    border-radius: 2px;
+    opacity: 0.7;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: absolute; /* Take out of flow */
+        left: -260px; /* Hide off-screen */
+        z-index: 40; /* Below potential overlay */
+        transition: left 0.3s ease;
+    }
+    .sidebar.open {
+        left: 0;
+    }
+    .main-content {
+        margin-left: 0; /* Take full width */
+    }
+    #menu-button {
+        display: block; /* Show hamburger */
+    }
+    .sidebar-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 30;
+    }
+    .sidebar.open + .sidebar-overlay {
+        display: block; /* Show overlay when sidebar is open */
+    }
+    .availability-grid {
+        grid-template-columns: repeat(8, minmax(50px, 1fr)); /* Smaller columns on mobile */
+    }
+}
+
+.placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280; /* gray-500 */
+    font-style: italic;
+}

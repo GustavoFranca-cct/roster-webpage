@@ -1,0 +1,78 @@
+
+/* Custom styles */
+body {
+    font-family: 'Inter', sans-serif;
+    color: #374151; /* gray-700 */
+    background-color: #f9fafb; /* gray-50 */
+}
+
+/* Add a subtle gradient to the hero section */
+.hero-gradient {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); /* sky-100 to sky-50 */
+}
+
+/* Consistent button styles */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 600; /* font-semibold */
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+.btn-primary {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8; /* blue-700 */
+}
+.btn-secondary {
+    background-color: #facc15; /* yellow-400 */
+    color: #713f12; /* yellow-900 */
+}
+.btn-secondary:hover {
+    background-color: #eab308; /* yellow-500 */
+}
+.btn-outline {
+    background-color: transparent;
+    color: #2563eb; /* blue-600 */
+    border: 2px solid #2563eb; /* blue-600 */
+}
+.btn-outline:hover {
+    background-color: #eff6ff; /* blue-50 */
+}
+
+/* Section padding */
+section {
+    padding: 4rem 1rem; /* py-16 px-4 */
+}
+@media (min-width: 768px) {
+    section {
+        padding: 6rem 2rem; /* md:py-24 md:px-8 */
+    }
+}
+
+/* Icon styling */
+.feature-icon, .benefit-icon {
+    width: 3rem; /* w-12 */
+    height: 3rem; /* h-12 */
+    padding: 0.75rem; /* p-3 */
+    border-radius: 0.75rem; /* rounded-xl */
+    background-color: #dbeafe; /* blue-100 */
+    color: #2563eb; /* blue-600 */
+    margin-bottom: 1rem; /* mb-4 */
+    display: inline-flex; /* Make it inline-flex to center icon */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Testimonial card styling */
+.testimonial-card {
+    background-color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    padding: 2rem; /* p-8 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    border: 1px solid #e5e7eb; /* gray-200 */
+}

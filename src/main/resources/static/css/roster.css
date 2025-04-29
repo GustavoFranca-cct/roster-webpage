@@ -1,0 +1,140 @@
+/* Custom styles */
+body {
+    font-family: 'Inter', sans-serif;
+    /* Subtle polygonal background */
+    background-color: #f0f9ff; /* Light blue background */
+    background-image:
+            linear-gradient(135deg, #e0f2fe 25%, transparent 25%),
+            linear-gradient(225deg, #e0f2fe 25%, transparent 25%),
+            linear-gradient(45deg, #e0f2fe 25%, transparent 25%),
+            linear-gradient(315deg, #e0f2fe 25%, #f0f9ff 25%);
+    background-position:
+            10px 0,
+            10px 0,
+            0 0,
+            0 0;
+    background-size: 20px 20px;
+    background-repeat: repeat;
+}
+
+/* Style for the schedule grid */
+.schedule-grid {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) repeat(5, minmax(120px, 1fr)); /* Employee Name + 5 days */
+    gap: 1px; /* Creates thin grid lines */
+    background-color: #cbd5e1; /* Grid line color */
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem; /* Rounded corners for the grid container */
+}
+
+.schedule-header, .schedule-cell, .employee-name {
+    background-color: white;
+    padding: 0.75rem; /* p-3 */
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px; /* Ensure cells have a minimum height */
+}
+
+.employee-name {
+    background-color: #f8fafc; /* Slightly different background for names */
+    font-weight: 600; /* font-semibold */
+    justify-content: flex-start; /* Align text left */
+    position: sticky; /* Keep employee names visible when scrolling horizontally */
+    left: 0;
+    z-index: 10;
+    border-right: 1px solid #cbd5e1; /* Separator line */
+}
+
+.schedule-header {
+    background-color: #bfdbfe; /* Light blue header */
+    color: #1e3a8a; /* Dark blue text */
+    font-weight: 600; /* font-semibold */
+    position: sticky;
+    top: 0; /* Stick headers to the top when scrolling vertically */
+    z-index: 5;
+}
+
+/* Style for assigned shifts */
+.shift-block {
+    background-color: #fef9c3; /* Light yellow */
+    border: 1px solid #facc15; /* Yellow border */
+    color: #713f12; /* Dark yellow/brown text */
+    border-radius: 0.375rem; /* rounded-md */
+    padding: 0.5rem; /* p-2 */
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1.2;
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow */
+    white-space: normal; /* Allow text wrapping */
+    text-align: center;
+}
+
+.shift-block:hover {
+    background-color: #fef08a; /* Slightly darker yellow on hover */
+}
+
+/* Style for the custom context menu (modal) */
+#context-menu {
+    position: fixed;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #e5e7eb; /* gray-200 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    padding: 1rem; /* p-4 */
+    min-width: 250px;
+    display: none; /* Hidden by default */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .schedule-grid {
+        /* Allow more flexible column sizing on smaller screens */
+        grid-template-columns: minmax(120px, auto) repeat(5, minmax(100px, 1fr));
+    }
+    .employee-name {
+        font-size: 0.875rem; /* text-sm */
+        padding: 0.5rem;
+    }
+    .schedule-header, .schedule-cell {
+        padding: 0.5rem;
+        font-size: 0.75rem; /* text-xs */
+        min-height: 50px;
+    }
+    .shift-block {
+        font-size: 0.7rem; /* Smaller font in blocks */
+        padding: 0.3rem;
+    }
+    /* Make filters stack vertically */
+    #filter-container > div {
+        margin-bottom: 0.5rem; /* Add space between stacked filters */
+    }
+}
+@media (max-width: 480px) {
+    .schedule-grid {
+        /* Even smaller columns */
+        grid-template-columns: minmax(100px, auto) repeat(5, minmax(80px, 1fr));
+    }
+    h1 {
+        font-size: 1.25rem; /* text-xl */
+    }
+    /* Further reduce padding/font size if needed */
+}
+
+/* Ensure message areas are defined if needed */
+#schedule-message, #generation-message {
+    min-height: 1em; /* Prevent layout shift when hidden/shown */
+    visibility: hidden;
+}
