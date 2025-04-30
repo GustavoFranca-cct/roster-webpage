@@ -1,5 +1,5 @@
 const API_BASE_URL = 'https://sailpocket.com/api'; // Your backend URL (use public URL via Nginx)
-
+// const API_BASE_URL = 'http://localhost:8090/api'; // Local backend URL (for development)
 /**
  * Shows a message to the user.
  * @param {string} elementId - The ID of the message paragraph element.
@@ -99,11 +99,11 @@ async function getEmployee(id) {
 }
 
 async function createEmployee(employeeData) {
-    return await fetchApi('/employees', { method: 'POST', body: employeeData });
+    return await fetchApi('/employees', { method: 'POST', body: JSON.stringify(employeeData) });
 }
 
 async function updateEmployee(id, employeeData) {
-    return await fetchApi(`/employees/${id}`, { method: 'PUT', body: employeeData });
+    return await fetchApi(`/employees/${id}`, { method: 'PUT', body: JSON.stringify(employeeData) });
 }
 
 // Replaced deleteEmployee

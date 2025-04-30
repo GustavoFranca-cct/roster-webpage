@@ -167,7 +167,8 @@ public class SecurityConfig {
         // IMPORTANT: Replace with your actual frontend origin(s) in production!
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:8090", // Example: Local dev frontend
-                "https://sailpocket.com" // Example: Production frontend - USE HTTPS
+                "https://sailpocket.com", // Production frontend
+                "https://www.sailpocket.com" // Production frontend (with www)
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
@@ -182,20 +183,4 @@ public class SecurityConfig {
         return source;
     }
 
-    // TODO: Consider adding a dedicated CORS configuration bean (WebMvcConfigurer) for more fine-grained control
-    // if the default .cors(withDefaults()) is not sufficient for production.
-    // Example:
-    // @Bean
-    // public WebMvcConfigurer corsConfigurer() {
-    //     return new WebMvcConfigurer() {
-    //         @Override
-    //         public void addCorsMappings(CorsRegistry registry) {
-    //             registry.addMapping("/api/**")
-    //                   .allowedOrigins("http://your-frontend-domain.com") // Specify allowed origin
-    //                   .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-    //                   .allowedHeaders("*")
-    //                   .allowCredentials(true);
-    //         }
-    //     };
-    // }
 }

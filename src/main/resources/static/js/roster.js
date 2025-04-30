@@ -1,4 +1,5 @@
 // Global variables for roster view (might need adjustment if loaded dynamically)
+let currentRosterContainer = null; // Store the container element
 let scheduleGridContainer;
 let employeeFilter;
 let taskFilter;
@@ -463,6 +464,7 @@ async function initializeRosterView(containerElement) {
         console.error("Roster container element not provided for initialization.");
         return;
     }
+    currentRosterContainer = containerElement; // Store the container
 
     // Find elements within the container
     scheduleGridContainer = containerElement.querySelector('#schedule-grid-container');
@@ -534,8 +536,8 @@ async function initializeRosterView(containerElement) {
     const defaultEndDate = formatDate(endOfWeek);
     
     // Set date pickers to default values (if they exist in this view)
-    const viewStartDateInput = containerElement.querySelector('#schedule-start-date');
-    const viewEndDateInput = containerElement.querySelector('#schedule-end-date');
+    const viewStartDateInput = containerElement.querySelector('#generate-start-date');
+    const viewEndDateInput = containerElement.querySelector('#generate-end-date');
     if(viewStartDateInput) viewStartDateInput.value = defaultStartDate;
     if(viewEndDateInput) viewEndDateInput.value = defaultEndDate;
 
@@ -546,14 +548,24 @@ async function initializeRosterView(containerElement) {
 
 // --- Handler for Load Schedule Button ---
 async function handleLoadScheduleClick() {
-    const viewStartDateInput = document.getElementById('schedule-start-date'); // Use document as it's part of the loaded HTML
-    const viewEndDateInput = document.getElementById('schedule-end-date');
-    if (!viewStartDateInput || !viewEndDateInput) {
-         showMessage('schedule-message', 'Date range inputs not found.', 'error');
-         return;
+    if (!currentRosterContainer) {
+        console.error("Roster container not initialized.");
+        showMessage('schedule-message', 'Error: Roster view not properly loaded.', 'error');
+        return;
     }
-    const startDate = viewStartDateInput.value;
-    const endDate = viewEndDateInput.value;
+    const startDate = generateStartDateInput.value;
+    const endDate = generateEndDateInput.value;
+
+    // const viewStartDateInput = currentRosterContainer.querySelector('#schedule-start-date');
+    // const viewEndDateInput = currentRosterContainer.querySelector('#schedule-end-date');
+
+    // if (!viewStartDateInput || !viewEndDateInput) {
+    //      showMessage('schedule-message', 'Date range inputs not found in this view.', 'error');
+    //      return;
+    // }
+    // const startDate = viewStartDateInput.value;   //using the generateStartDateInput.value instead of viewStartDateInput.value
+    // const endDate = viewEndDateInput.value;      //using the generateEndDateInput.value instead of viewEndDateInput.value
+
     if (!startDate || !endDate) {
          showMessage('schedule-message', 'Please select both start and end dates.', 'warning');
          return;
@@ -563,14 +575,20 @@ async function handleLoadScheduleClick() {
 
 // --- New Handler for Delete Schedule Button ---
 async function handleDeleteScheduleClick() {
-    const viewStartDateInput = document.getElementById('schedule-start-date');
-    const viewEndDateInput = document.getElementById('schedule-end-date');
-    if (!viewStartDateInput || !viewEndDateInput) {
-         showMessage('schedule-message', 'Date range inputs not found.', 'error');
-         return;
+    if (!currentRosterContainer) {
+        console.error("Roster container not initialized.");
+        showMessage('schedule-message', 'Error: Roster view not properly loaded.', 'error');
+        return;
     }
-    const startDate = viewStartDateInput.value;
-    const endDate = viewEndDateInput.value;
+    // const viewStartDateInput = currentRosterContainer.querySelector('#schedule-start-date');
+    // const viewEndDateInput = currentRosterContainer.querySelector('#schedule-end-date');
+    const startDate = generateStartDateInput.value;
+    const endDate = generateEndDateInput.value;
+    // if (!startDate || !endDate) {
+    //      showMessage('schedule-message', 'Date range inputs not found in this view.', 'error');
+    //      return;
+    // }
+
 
     if (!startDate || !endDate) {
          showMessage('schedule-message', 'Please select the date range of the schedule to delete.', 'warning');
@@ -615,8 +633,8 @@ async function handleDeleteShiftClick(event) {
         showMessage('schedule-message', `Shift ${shiftId} deleted successfully.`, 'success', 3000);
         // Refresh the schedule view to reflect the deletion
         // Need the current start/end dates from the view inputs
-        const viewStartDateInput = document.getElementById('schedule-start-date');
-        const viewEndDateInput = document.getElementById('schedule-end-date');
+        const viewStartDateInput = currentRosterContainer.querySelector('#generate-start-date'); //using the element id from the generate-start-date input
+        const viewEndDateInput = currentRosterContainer.querySelector('#generate-end-date'); //using the element id from the generate-end-date input
         if (viewStartDateInput && viewEndDateInput && viewStartDateInput.value && viewEndDateInput.value) {
             await displaySchedule(viewStartDateInput.value, viewEndDateInput.value);
         } else {
@@ -630,7 +648,3 @@ async function handleDeleteShiftClick(event) {
         hideLoadingOverlay();
     }
 }
-
-// Note: This file assumes that functions like getEmployees(), getTasks(), getScheduleApi(), generateScheduleApi()
-// are globally available (e.g., defined in api.js loaded in dashboard.html).
-// If using modules, these would need to be imported.
