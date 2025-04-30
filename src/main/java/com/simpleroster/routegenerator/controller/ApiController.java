@@ -124,15 +124,16 @@ public class ApiController {
       * Deactivates an employee (marks them as inactive).
       *
       * @param id The ID of the employee to deactivate.
-      * @return ResponseEntity with 200 OK if successful, or 404 Not Found if the employee doesn't exist.
+      * @return ResponseEntity with a confirmation message (200 OK) if successful, or 404 Not Found if the employee doesn't exist.
       */
     @PutMapping("/employees/{id}/deactivate")
-    public ResponseEntity<Void> deactivateEmployee(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deactivateEmployee(@PathVariable Long id) {
         log.info("PUT /employees/{}/deactivate requested", id);
         try {
             employeeService.deactivateEmployee(id);
              log.info("Employee {} deactivated successfully.", id);
-            return ResponseEntity.ok().build(); // HTTP 200 OK
+             Map<String, String> responseBody = Map.of("message", "Employee deactivated successfully");
+            return ResponseEntity.ok(responseBody);
         } catch (EntityNotFoundException e) {
              log.warn("Employee not found for deactivation, ID: {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
@@ -143,15 +144,16 @@ public class ApiController {
       * Activates an employee (marks them as active).
       *
       * @param id The ID of the employee to activate.
-      * @return ResponseEntity with 200 OK if successful, or 404 Not Found if the employee doesn't exist.
+      * @return ResponseEntity with a confirmation message (200 OK) if successful, or 404 Not Found if the employee doesn't exist.
       */
     @PutMapping("/employees/{id}/activate")
-    public ResponseEntity<Void> activateEmployee(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> activateEmployee(@PathVariable Long id) {
          log.info("PUT /employees/{}/activate requested", id);
         try {
             employeeService.activateEmployee(id);
              log.info("Employee {} activated successfully.", id);
-            return ResponseEntity.ok().build(); // HTTP 200 OK
+             Map<String, String> responseBody = Map.of("message", "Employee activated successfully");
+             return ResponseEntity.ok(responseBody);
         } catch (EntityNotFoundException e) {
              log.warn("Employee not found for activation, ID: {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

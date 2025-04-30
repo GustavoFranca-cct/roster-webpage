@@ -54,8 +54,25 @@ mvn spring-boot:run
 *   **To access the application:**
     *   Open a web browser and navigate to `http://localhost:8090/` for the main page.
 
+```Create an Nginx Config file
 
+In /etc/nginx/sites-available/ create <my-appname> file and add the below setup:```
 
+```server {
+listen 80;
+listen [::]:80;
+server_name <servername>;
+
+        location / {
+         proxy_pass http://localhost:8080/;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+         proxy_set_header X-Forwarded-Port $server_port;
+    }
+
+}
+```
+systemctl restart nginx
 
 ## 2. Architecture
 
