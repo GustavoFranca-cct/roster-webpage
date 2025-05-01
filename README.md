@@ -98,6 +98,7 @@ Set Password for postgres User:
 2.3. Database Configuration (Port)
 
 The application needs to know which port PostgreSQL is running on. By default, PostgreSQL uses port 5432.
+(my original applications runs on port 5433 due to a hardcoded value in old JAR build, so if you use the default you should config the application.properties)
 
     Check PostgreSQL Port:
     Bash
@@ -112,7 +113,7 @@ Option A (Recommended): Configure the Application
 
 Option B: Change PostgreSQL Port (Only if necessary)
 
-    If you absolutely must run PostgreSQL on port 5433 (as mentioned in the original notes perhaps due to a hardcoded value in an old JAR build), follow these steps:
+    If you absolutely must run PostgreSQL on port 5433, follow these steps:
         Stop PostgreSQL: sudo systemctl stop postgresql
         Edit the configuration file (path might vary slightly based on version/OS):
         Bash
@@ -140,9 +141,12 @@ server.port=8090
 
 # Database Connection
 spring.datasource.url=jdbc:postgresql://localhost:5432/simpleroster-v2
+
 # ^^ Adjust localhost and port (e.g., 5433 if you changed it) if needed.
 spring.datasource.username=postgres
 spring.datasource.password=YOUR_POSTGRES_PASSWORD_HERE
+(the original password is on application.properties)
+
 # ^^ Use the password you set in step 2.2.3
 
 # JPA/Hibernate Settings (Example)
